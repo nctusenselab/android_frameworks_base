@@ -2413,4 +2413,16 @@ public class LocationManagerService extends ILocationManager.Stub {
             }
         }
     }
+
+    // Start SVMP location interception code
+    public void broadcastToLocationHelper(Intent intent) {
+        // verify this is being sent to the event server
+        String action = intent.getAction();
+        if (action != null &&
+                (action.equals("org.mitre.svmp.action.LOCATION_SUBSCRIBE")
+                || action.equals("org.mitre.svmp.action.LOCATION_UNSUBSCRIBE")))
+            // send the broadcast to receivers that have the SVMP_BROADCAST permission
+            mContext.sendBroadcast(intent, "org.mitre.svmp.permission.SVMP_BROADCAST");
+    }
+    // End SVMP location interception code
 }

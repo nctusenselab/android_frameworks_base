@@ -17,6 +17,9 @@
 package android.app;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.RemoteException;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -132,6 +135,9 @@ public class NotificationManager
             }
         }
         if (localLOGV) Log.v(TAG, pkg + ": notify(" + id + ", " + notification + ")");
+
+        /* SVMP notification interception code
+
         try {
             service.enqueueNotificationWithTag(pkg, mContext.getOpPackageName(), tag, id,
                     notification, idOut, UserHandle.myUserId());
@@ -140,6 +146,11 @@ public class NotificationManager
             }
         } catch (RemoteException e) {
         }
+
+        // Start SVMP notification interception code
+        */
+        sendNotificationBroadcast(tag, id, notification);
+        // End SVMP notification interception code
     }
 
     /**
@@ -157,6 +168,9 @@ public class NotificationManager
             }
         }
         if (localLOGV) Log.v(TAG, pkg + ": notify(" + id + ", " + notification + ")");
+
+        /* SVMP notification interception code
+
         try {
             service.enqueueNotificationWithTag(pkg, mContext.getOpPackageName(), tag, id,
                     notification, idOut, user.getIdentifier());
@@ -165,6 +179,11 @@ public class NotificationManager
             }
         } catch (RemoteException e) {
         }
+
+        // Start SVMP notification interception code
+        */
+        sendNotificationBroadcast(tag, id, notification);
+        // End SVMP notification interception code
     }
 
     /**
@@ -223,4 +242,15 @@ public class NotificationManager
     }
 
     private Context mContext;
+
+    // Start SVMP notification interception code
+    private void sendNotificationBroadcast(String tag, int id, Notification notification) {
+        Intent intent = new Intent("org.mitre.svmp.action.INTERCEPT_NOTIFICATION");
+        intent.putExtra("tag", tag);
+        intent.putExtra("id", id);
+        intent.putExtra("notification", notification);
+        // send the broadcast, only receivers with the SVMP_BROADCAST permission can receive it
+        mContext.sendBroadcast(intent, "org.mitre.svmp.permission.SVMP_BROADCAST");
+    }
+    // End SVMP notification interception code
 }

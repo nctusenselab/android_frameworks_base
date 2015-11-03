@@ -245,6 +245,13 @@
 
     <protected-broadcast android:name="android.intent.action.PHONE_STATE" />
 
+
+    <!-- SVMP protected broadcasts -->
+    <protected-broadcast android:name="org.mitre.svmp.action.LOCATION_SUBSCRIBE" />
+    <protected-broadcast android:name="org.mitre.svmp.action.LOCATION_UNSUBSCRIBE" />
+    <!-- for some reason, protecting the INTERCEPT_NOTIFICATION broadcast causes a crash in NotificationManager... -->
+    <!--<protected-broadcast android:name="org.mitre.svmp.action.INTERCEPT_NOTIFICATION" />-->
+
     <protected-broadcast android:name="android.location.GPS_ENABLED_CHANGE" />
     <protected-broadcast android:name="android.location.PROVIDERS_CHANGED" />
     <protected-broadcast android:name="android.location.MODE_CHANGED" />
@@ -976,6 +983,12 @@
     <permission android:name="android.permission.NET_ADMIN"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
         android:protectionLevel="signature" />
+
+    <!-- SVMP addition, allows svmpd to access the framebuffer device.
+         @hide -->
+    <permission android:name="android.permission.GRAPHICS"
+                android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
+                android:protectionLevel="signature" />
 
     <!-- Allows registration for remote audio playback. @hide -->
     <permission android:name="android.permission.REMOTE_AUDIO_PLAYBACK"
